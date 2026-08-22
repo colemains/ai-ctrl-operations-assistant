@@ -1,8 +1,8 @@
-import type { Metadata } from 'next'
+import './globals.css'
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'AI CTRL Operations Assistant',
-  description: 'Read-only operational intelligence for AI CTRL support',
+  description: 'Multi-discipline support intelligence platform',
 }
 
 export default function RootLayout({
@@ -12,9 +12,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, fontFamily: 'system-ui, sans-serif' }}>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
