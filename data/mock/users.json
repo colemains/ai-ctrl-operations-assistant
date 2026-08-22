@@ -1,0 +1,38 @@
+[
+  {
+    "id": "user-1",
+    "email": "cole.mains@expedient.com",
+    "name": "Cole Mains",
+    "role": "AI_CTRL",
+    "discipline": "AI_CTRL",
+    "data_access": {
+      "smc_tickets": "AI_CTRL",
+      "elastic_instances": "all_clients",
+      "openwebui_deployments": "all_clients",
+      "alerts": "ai_ctrl_platform"
+    },
+    "preferences": {
+      "output_format": "summary_with_tables",
+      "default_time_range": "24_hours",
+      "alert_priority": "high_and_critical"
+    }
+  },
+  {
+    "id": "user-2",
+    "email": "security.analyst@expedient.com",
+    "name": "Security Analyst",
+    "role": "SECURITY",
+    "discipline": "SECURITY",
+    "data_access": {
+      "smc_tickets": "SECURITY",
+      "elastic_instances": "all_clients",
+      "openwebui_deployments": "auth_logs_only",
+      "alerts": "security_platform"
+    },
+    "preferences": {
+      "output_format": "detailed_logs",
+      "default_time_range": "7_days",
+      "alert_priority": "all"
+    }
+  }
+]

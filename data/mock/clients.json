@@ -1,0 +1,58 @@
+[
+  {
+    "id": "client-alpha",
+    "name": "Alpha Manufacturing",
+    "environment": "production",
+    "deployment_type": "AI_CTRL",
+    "elastic_disk_usage": 87,
+    "elastic_disk_total": "512GB",
+    "elastic_disk_used": "450GB",
+    "elastic_cluster_status": "yellow",
+    "openwebui_uptime": 99.97,
+    "openwebui_active_users": 45,
+    "openwebui_avg_response_time": 3.2,
+    "last_health_check": "2025-01-15T09:00:00Z"
+  },
+  {
+    "id": "client-beta",
+    "name": "Beta Financial Services",
+    "environment": "production",
+    "deployment_type": "AI_CTRL",
+    "elastic_disk_usage": 62,
+    "elastic_disk_total": "1TB",
+    "elastic_disk_used": "620GB",
+    "elastic_cluster_status": "green",
+    "openwebui_uptime": 98.5,
+    "openwebui_active_users": 23,
+    "openwebui_avg_response_time": 8.2,
+    "last_health_check": "2025-01-15T09:00:00Z"
+  },
+  {
+    "id": "client-gamma",
+    "name": "Gamma Healthcare",
+    "environment": "production",
+    "deployment_type": "AI_CTRL",
+    "elastic_disk_usage": 45,
+    "elastic_disk_total": "512GB",
+    "elastic_disk_used": "230GB",
+    "elastic_cluster_status": "green",
+    "openwebui_uptime": 99.99,
+    "openwebui_active_users": 67,
+    "openwebui_avg_response_time": 2.1,
+    "last_health_check": "2025-01-15T09:00:00Z"
+  },
+  {
+    "id": "client-delta",
+    "name": "Delta Logistics",
+    "environment": "production",
+    "deployment_type": "AI_CTRL",
+    "elastic_disk_usage": 87,
+    "elastic_disk_total": "512GB",
+    "elastic_disk_used": "450GB",
+    "elastic_cluster_status": "yellow",
+    "openwebui_uptime": 99.8,
+    "openwebui_active_users": 34,
+    "openwebui_avg_response_time": 2.8,
+    "last_health_check": "2025-01-15T09:00:00Z"
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "id": "INC0012345",
+    "client": "Alpha Manufacturing",
+    "priority": "critical",
+    "status": "open",
+    "title": "Authentication failures - SSO integration broken",
+    "description": "Users unable to login via Azure AD SSO. Error: OIDC token validation failed.",
+    "created_at": "2025-01-15T08:00:00Z",
+    "updated_at": "2025-01-15T09:30:00Z",
+    "assigned_to": "AI CTRL Team",
+    "problem_type": "AI_CTRL",
+    "environment": "production",
+    "affected_users": 45
+  },
+  {
+    "id": "INC0012346",
+    "client": "Beta Financial Services",
+    "priority": "high",
+    "status": "open",
+    "title": "Gateway timeout errors - 504s",
+    "description": "OpenWebUI gateway returning 504 errors intermittently. Spike started at 08:15 AM.",
+    "created_at": "2025-01-15T08:15:00Z",
+    "updated_at": "2025-01-15T08:45:00Z",
+    "assigned_to": "AI CTRL Team",
+    "problem_type": "AI_CTRL",
+    "environment": "production",
+    "affected_users": 12
+  },
+  {
+    "id": "INC0012347",
+    "client": "Gamma Healthcare",
+    "priority": "medium",
+    "status": "in_progress",
+    "title": "Data connector sync delay",
+    "description": "SharePoint connector sync running slower than normal. Currently 2 hours behind.",
+    "created_at": "2025-01-14T16:00:00Z",
+    "updated_at": "2025-01-15T07:00:00Z",
+    "assigned_to": "Cole Mains",
+    "problem_type": "AI_CTRL",
+    "environment": "production",
+    "affected_users": 0
+  },
+  {
+    "id": "INC0012348",
+    "client": "Delta Logistics",
+    "priority": "medium",
+    "status": "open",
+    "title": "Elastic disk usage warning",
+    "description": "Elastic cluster disk usage at 87%. Approaching capacity limit.",
+    "created_at": "2025-01-15T06:00:00Z",
+    "updated_at": "2025-01-15T06:00:00Z",
+    "assigned_to": "Infrastructure Team",
+    "problem_type": "INFRASTRUCTURE",
+    "environment": "production",
+    "affected_users": 0
+  },
+  {
+    "id": "REQ0005432",
+    "client": "Epsilon Technology",
+    "priority": "low",
+    "status": "open",
+    "title": "Enable Jira integration",
+    "description": "Customer requesting Jira data connector for AI CTRL deployment.",
+    "created_at": "2025-01-14T10:00:00Z",
+    "updated_at": "2025-01-14T10:00:00Z",
+    "assigned_to": "AI CTRL Team",
+    "problem_type": "AI_CTRL",
+    "environment": "production",
+    "affected_users": 0
+  }
+]

@@ -1,0 +1,28 @@
+{
+  "name": "ai-ctrl-operations-assistant",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "tools/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "db:setup": "node scripts/setup-database.js",
+    "db:seed": "node scripts/seed-mock-data.js",
+    "quick-start": "npm run docker:up && npm run db:setup && npm run db:seed && npm run build && npm run dev"
+  },
+  "devDependencies": {
+    "turbo": "^1.10.0",
+    "typescript": "^5.2.0",
+    "prettier": "^3.0.0",
+    "eslint": "^8.50.0",
+    "pg": "^8.11.0"
+  }
+}

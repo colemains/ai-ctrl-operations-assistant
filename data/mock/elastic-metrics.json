@@ -1,0 +1,50 @@
+[
+  {
+    "client_id": "client-alpha",
+    "client_name": "Alpha Manufacturing",
+    "cluster_name": "elastic-alpha-prod",
+    "cluster_status": "yellow",
+    "disk_usage_percent": 87,
+    "disk_total_gb": 512,
+    "disk_used_gb": 450,
+    "disk_available_gb": 62,
+    "estimated_days_until_full": 7,
+    "growth_rate_gb_per_day": 8,
+    "document_count": 1234567,
+    "index_count": 23,
+    "shard_count": 46,
+    "last_updated": "2025-01-15T09:00:00Z"
+  },
+  {
+    "client_id": "client-beta",
+    "client_name": "Beta Financial Services",
+    "cluster_name": "elastic-beta-prod",
+    "cluster_status": "green",
+    "disk_usage_percent": 62,
+    "disk_total_gb": 1024,
+    "disk_used_gb": 620,
+    "disk_available_gb": 404,
+    "estimated_days_until_full": 135,
+    "growth_rate_gb_per_day": 3,
+    "document_count": 2345678,
+    "index_count": 45,
+    "shard_count": 90,
+    "last_updated": "2025-01-15T09:00:00Z"
+  },
+  {
+    "client_id": "client-delta",
+    "client_name": "Delta Logistics",
+    "cluster_name": "elastic-delta-prod",
+    "cluster_status": "yellow",
+    "disk_usage_percent": 87,
+    "disk_total_gb": 512,
+    "disk_used_gb": 450,
+    "disk_available_gb": 62,
+    "estimated_days_until_full": 7,
+    "growth_rate_gb_per_day": 8,
+    "document_count": 987654,
+    "index_count": 18,
+    "shard_count": 36,
+    "last_updated": "2025-01-15T09:00:00Z"
+  }
+]
