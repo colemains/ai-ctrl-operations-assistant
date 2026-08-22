@@ -1,0 +1,65 @@
+global:
+  environment: production
+  domain: ai-assistant.expedient.cloud
+
+images:
+  web:
+    tag: v1.0.0
+  mastra:
+    tag: v1.0.0
+  api:
+    tag: v1.0.0
+
+replicaCount:
+  web: 3
+  mastra: 3
+  api: 2
+
+autoscaling:
+  enabled: true
+
+env:
+  NODE_ENV: production
+  USE_MOCK_DATA: "false"
+  AUTH_ENABLED: "true"
+  NEXT_PUBLIC_API_URL: "https://ai-assistant.expedient.cloud/api"
+
+  # Enable integrations in production (after setup)
+  SMC_API_ENABLED: "true"
+  ELASTIC_API_ENABLED: "true"
+  OPENWEBUI_API_ENABLED: "true"
+  CONFLUENCE_API_ENABLED: "false"  # Enable when ready
+  ALERTS_API_ENABLED: "true"
+  NOTIFICATIONS_ENABLED: "true"
+
+  OTEL_ENABLED: "true"
+  DAILY_BUDGET_USD: "10.00"
+  MONTHLY_BUDGET_USD: "150.00"
+
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+
+postgresql:
+  primary:
+    persistence:
+      size: 50Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2000m
+        memory: 4Gi
+
+redis:
+  master:
+    persistence:
+      size: 10Gi
+
+qdrant:
+  persistence:
+    size: 100Gi

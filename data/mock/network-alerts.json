@@ -1,0 +1,44 @@
+[
+  {
+    "alertId": "net-001",
+    "source": "network_monitor",
+    "client": "Beta Financial Services",
+    "environment": "production",
+    "component": "vpn-gateway",
+    "severity": "high",
+    "status": "active",
+    "title": "VPN Gateway High Latency",
+    "message": "Site-to-site VPN latency exceeded 200ms threshold (current: 347ms)",
+    "observedAt": "2025-01-15T08:15:00Z",
+    "duration": "4h 15m",
+    "fingerprint": "net-vpn-latency-beta"
+  },
+  {
+    "alertId": "net-002",
+    "source": "network_monitor",
+    "client": "Alpha Manufacturing",
+    "environment": "production",
+    "component": "firewall",
+    "severity": "critical",
+    "status": "active",
+    "title": "Firewall Connection Limit Reached",
+    "message": "Firewall concurrent connections at 98% capacity (49,000/50,000)",
+    "observedAt": "2025-01-15T10:30:00Z",
+    "duration": "2h 0m",
+    "fingerprint": "net-fw-capacity-alpha"
+  },
+  {
+    "alertId": "net-003",
+    "source": "network_monitor",
+    "client": "Gamma Healthcare",
+    "environment": "production",
+    "component": "wan-link",
+    "severity": "high",
+    "status": "active",
+    "title": "WAN Link Packet Loss",
+    "message": "Primary WAN link experiencing 3.2% packet loss",
+    "observedAt": "2025-01-15T11:45:00Z",
+    "duration": "1h 30m",
+    "fingerprint": "net-wan-packet-loss-gamma"
+  }
+]

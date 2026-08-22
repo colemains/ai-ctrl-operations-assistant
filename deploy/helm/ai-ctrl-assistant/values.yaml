@@ -1,0 +1,302 @@
+# Global configuration
+global:
+  environment: staging
+  domain: ai-assistant.expedient.cloud
+  imageRegistry: ghcr.io
+  imageOrganization: expedient
+  imagePullPolicy: IfNotPresent
+
+# Image configurations
+images:
+  web:
+    repository: ghcr.io/expedient/ai-ctrl-assistant-web
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  mastra:
+    repository: ghcr.io/expedient/ai-ctrl-assistant-mastra
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  api:
+    repository: ghcr.io/expedient/ai-ctrl-assistant-api
+    tag: latest
+    pullPolicy: IfNotPresent
+
+# Replica counts
+replicaCount:
+  web: 2
+  mastra: 2
+  api: 2
+
+# Resource limits
+resources:
+  web:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  mastra:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+
+  api:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+# Autoscaling
+autoscaling:
+  enabled: true
+  web:
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+  mastra:
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 75
+  api:
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+
+# Service configuration
+service:
+  type: ClusterIP
+  web:
+    port: 3000
+    targetPort: 3000
+  mastra:
+    port: 8080
+    targetPort: 8080
+  api:
+    port: 8081
+    targetPort: 8081
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+  hosts:
+    - host: ai-assistant.expedient.cloud
+      paths:
+        - path: /
+          pathType: Prefix
+          backend: web
+        - path: /api
+          pathType: Prefix
+          backend: mastra
+  tls:
+    - secretName: ai-assistant-tls
+      hosts:
+        - ai-assistant.expedient.cloud
+
+# PostgreSQL (bundled)
+postgresql:
+  enabled: true
+  auth:
+    username: aictrl
+    password: "" # Will be generated or set via secret
+    database: aictrl_ops
+  primary:
+    persistence:
+      enabled: true
+      size: 10Gi
+    resources:
+      requests:
+        cpu: 250m
+        memory: 256Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+
+# Redis (bundled)
+redis:
+  enabled: true
+  auth:
+    enabled: true
+    password: "" # Will be generated or set via secret
+  master:
+    persistence:
+      enabled: true
+      size: 5Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+# Qdrant (bundled)
+qdrant:
+  enabled: true
+  persistence:
+    enabled: true
+    size: 20Gi
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+  config:
+    apiKey: "" # Will be set via secret
+
+# Environment variables
+env:
+  # Node environment
+  NODE_ENV: production
+
+  # Feature flags
+  USE_MOCK_DATA: "false"
+  AUTH_ENABLED: "true"
+
+  # API endpoints
+  NEXT_PUBLIC_API_URL: "https://ai-assistant.expedient.cloud/api"
+
+  # Integration toggles (start with false, enable after setup)
+  SMC_API_ENABLED: "false"
+  ELASTIC_API_ENABLED: "false"
+  OPENWEBUI_API_ENABLED: "false"
+  CONFLUENCE_API_ENABLED: "false"
+  ALERTS_API_ENABLED: "false"
+  NOTIFICATIONS_ENABLED: "false"
+
+  # Observability
+  OTEL_ENABLED: "true"
+  AUDIT_LOGGING_ENABLED: "true"
+  COST_TRACKING_ENABLED: "true"
+
+  # Budgets
+  DAILY_BUDGET_USD: "10.00"
+  MONTHLY_BUDGET_USD: "150.00"
+
+# Secrets (reference existing secrets or create from values)
+secrets:
+  existingSecret: "" # If empty, will create from values below
+
+  # Database
+  databaseUrl: "" # postgresql://user:pass@host:5432/db
+
+  # Redis
+  redisUrl: "" # redis://:password@host:6379
+
+  # Qdrant
+  qdrantUrl: "" # http://qdrant:6333
+  qdrantApiKey: ""
+
+  # WorkOS
+  workosApiKey: ""
+  workosClientId: ""
+
+  # AI Providers
+  anthropicApiKey: ""
+  openaiApiKey: ""
+
+  # Integrations (add when ready)
+  smcApiToken: ""
+  elasticApiKey: ""
+  openwebuiApiToken: ""
+  confluenceApiToken: ""
+  alertsApiToken: ""
+
+  # Session
+  sessionSecret: ""
+
+# Security context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  fsGroup: 1001
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+
+# Pod security
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  fsGroup: 1001
+
+# Network policy
+networkPolicy:
+  enabled: true
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: ingress-nginx
+  egress:
+    - to:
+      - namespaceSelector: {}
+    - to:
+      - podSelector:
+          matchLabels:
+            app: postgresql
+    - to:
+      - podSelector:
+          matchLabels:
+            app: redis
+    - to:
+      - podSelector:
+          matchLabels:
+            app: qdrant
+    - ports:
+      - protocol: TCP
+        port: 53
+      - protocol: UDP
+        port: 53
+    - ports:
+      - protocol: TCP
+        port: 443
+
+# Monitoring
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    interval: 30s
+  prometheusRule:
+    enabled: true
+
+# Node selector
+nodeSelector:
+  workload: ai-ctrl
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - ai-ctrl-assistant
+          topologyKey: kubernetes.io/hostname

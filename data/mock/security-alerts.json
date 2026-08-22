@@ -1,0 +1,58 @@
+[
+  {
+    "alertId": "sec-001",
+    "source": "security_monitor",
+    "client": "Beta Financial Services",
+    "environment": "production",
+    "component": "identity-provider",
+    "severity": "critical",
+    "status": "active",
+    "title": "Multiple Failed Login Attempts",
+    "message": "87 failed login attempts from 12 unique IPs in last hour",
+    "observedAt": "2025-01-15T09:00:00Z",
+    "duration": "3h 15m",
+    "fingerprint": "sec-failed-logins-beta"
+  },
+  {
+    "alertId": "sec-002",
+    "source": "security_monitor",
+    "client": "Alpha Manufacturing",
+    "environment": "production",
+    "component": "mfa-service",
+    "severity": "high",
+    "status": "active",
+    "title": "MFA Enrollment Below Policy",
+    "message": "Only 67% of users have MFA enabled (policy requires 90%)",
+    "observedAt": "2025-01-14T14:00:00Z",
+    "duration": "22h 15m",
+    "fingerprint": "sec-mfa-compliance-alpha"
+  },
+  {
+    "alertId": "sec-003",
+    "source": "security_monitor",
+    "client": "Gamma Healthcare",
+    "environment": "production",
+    "component": "access-control",
+    "severity": "high",
+    "status": "active",
+    "title": "Unauthorized Access Attempt",
+    "message": "Attempted access to restricted PHI data by unauthorized service account",
+    "observedAt": "2025-01-15T07:30:00Z",
+    "duration": "5h 45m",
+    "fingerprint": "sec-unauthorized-access-gamma"
+  },
+  {
+    "alertId": "sec-004",
+    "source": "security_monitor",
+    "client": "Delta Logistics",
+    "environment": "production",
+    "component": "certificate-manager",
+    "severity": "high",
+    "status": "active",
+    "title": "SSL Certificate Expiring Soon",
+    "message": "Production SSL certificate expires in 14 days",
+    "observedAt": "2025-01-15T06:00:00Z",
+    "duration": "6h 15m",
+    "fingerprint": "sec-cert-expiry-delta"
+  }
+]

@@ -1,0 +1,147 @@
+global:
+  environment: local
+  domain: localhost
+
+images:
+  web:
+    repository: ai-ctrl-assistant-web
+    tag: latest
+    pullPolicy: Never
+
+  mastra:
+    repository: ai-ctrl-assistant-mastra
+    tag: latest
+    pullPolicy: Never
+
+replicaCount:
+  web: 1
+  mastra: 1
+
+autoscaling:
+  enabled: false
+
+service:
+  type: ClusterIP
+  web:
+    port: 3000
+    targetPort: 3000
+  mastra:
+    port: 8080
+    targetPort: 8080
+
+env:
+  NODE_ENV: development
+  USE_MOCK_DATA: "true"
+  AUTH_ENABLED: "false"
+  NEXT_PUBLIC_API_URL: "http://localhost:8080"
+
+  SMC_API_ENABLED: "false"
+  ELASTIC_API_ENABLED: "false"
+  OPENWEBUI_API_ENABLED: "false"
+  CONFLUENCE_API_ENABLED: "false"
+  ALERTS_API_ENABLED: "false"
+  NOTIFICATIONS_ENABLED: "false"
+
+  OTEL_ENABLED: "false"
+  AUDIT_LOGGING_ENABLED: "true"
+  COST_TRACKING_ENABLED: "true"
+  DAILY_BUDGET_USD: "5.00"
+  MONTHLY_BUDGET_USD: "50.00"
+
+ingress:
+  enabled: false
+
+# Use Docker Hub images instead of GitHub
+postgresql:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: bitnami/postgresql
+    tag: 16.1.0
+  auth:
+    username: aictrl
+    password: aictrl123
+    database: aictrl_ops
+  primary:
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+redis:
+  enabled: true
+  image:
+    registry: docker.io
+    repository: bitnami/redis
+    tag: 7.2.4
+  auth:
+    enabled: false
+  master:
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  replica:
+    replicaCount: 0  # Disable replicas for local dev
+
+qdrant:
+  enabled: false  # Disable for now, add back later if needed
+
+secrets:
+  databaseUrl: "postgresql://aictrl:aictrl123@ai-ctrl-assistant-postgresql:5432/aictrl_ops"
+  redisUrl: "redis://ai-ctrl-assistant-redis-master:6379"
+  qdrantUrl: ""
+  qdrantApiKey: ""
+  workosApiKey: ""
+  workosClientId: ""
+  anthropicApiKey: ""
+  openaiApiKey: ""
+  sessionSecret: "local-dev-secret-12345"
+
+# Remove node selector (causing scheduling failures)
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+resources:
+  web:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  mastra:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+# Simplified security context (no fsGroup issues)
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false  # Changed to false for simplicity
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  fsGroup: 1001
+
+networkPolicy:
+  enabled: false

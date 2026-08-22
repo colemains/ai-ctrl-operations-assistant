@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ai-ctrl-assistant.fullname" . }}-mastra
+  labels:
+    {{- include "ai-ctrl-assistant.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mastra
+spec:
+  replicas: {{ .Values.replicaCount.mastra | default 1 }}
+  selector:
+    matchLabels:
+      {{- include "ai-ctrl-assistant.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: mastra
+  template:
+    metadata:
+      labels:
+        {{- include "ai-ctrl-assistant.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: mastra
+    spec:
+      {{- if .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: mastra
+        image: "{{ .Values.images.mastra.repository }}:{{ .Values.images.mastra.tag }}"
+        imagePullPolicy: {{ .Values.images.mastra.pullPolicy }}
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        env:
+        {{- range $key, $value := .Values.env }}
+        - name: {{ $key }}
+          value: {{ $value | quote }}
+        {{- end }}
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "ai-ctrl-assistant.fullname" . }}-secrets
+              key: databaseUrl
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "ai-ctrl-assistant.fullname" . }}-secrets
+              key: redisUrl
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        {{- if .Values.securityContext }}
+        securityContext:
+          runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+          runAsUser: {{ .Values.securityContext.runAsUser }}
+          capabilities:
+            {{- toYaml .Values.securityContext.capabilities | nindent 12 }}
+          readOnlyRootFilesystem: {{ .Values.securityContext.readOnlyRootFilesystem }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.resources.mastra | nindent 10 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

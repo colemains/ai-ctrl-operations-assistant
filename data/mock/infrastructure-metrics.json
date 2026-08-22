@@ -1,0 +1,46 @@
+[
+  {
+    "client": "Alpha Manufacturing",
+    "environment": "production",
+    "component": "compute-cluster",
+    "metric": "cpu_utilization",
+    "value": 89,
+    "threshold": 85,
+    "status": "warning",
+    "trend": "increasing",
+    "message": "CPU utilization trending upward - at 89% (threshold: 85%)"
+  },
+  {
+    "client": "Beta Financial Services",
+    "environment": "production",
+    "component": "storage-array",
+    "metric": "storage_capacity",
+    "value": 82,
+    "threshold": 80,
+    "status": "warning",
+    "trend": "stable",
+    "message": "Storage at 82% capacity (4.1TB / 5TB)"
+  },
+  {
+    "client": "Gamma Healthcare",
+    "environment": "production",
+    "component": "memory-pool",
+    "metric": "memory_utilization",
+    "value": 76,
+    "threshold": 80,
+    "status": "healthy",
+    "trend": "stable",
+    "message": "Memory utilization normal at 76%"
+  },
+  {
+    "client": "Delta Logistics",
+    "environment": "production",
+    "component": "vm-cluster",
+    "metric": "snapshot_age",
+    "value": 45,
+    "threshold": 30,
+    "status": "warning",
+    "trend": "increasing",
+    "message": "VM snapshots older than 30 days detected (oldest: 45 days)"
+  }
+]

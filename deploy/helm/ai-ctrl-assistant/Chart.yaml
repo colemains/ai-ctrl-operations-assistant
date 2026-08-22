@@ -1,0 +1,25 @@
+apiVersion: v2
+name: ai-ctrl-assistant
+description: AI CTRL Operations Assistant - Multi-Discipline AI Platform
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - ai
+  - operations
+  - monitoring
+  - expedient
+maintainers:
+  - name: Cole Mains
+    email: cole.mains@expedient.com
+
+dependencies:
+  - name: postgresql
+    version: 13.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+
+  - name: redis
+    version: 18.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: redis.enabled

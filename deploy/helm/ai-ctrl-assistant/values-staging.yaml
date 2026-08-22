@@ -1,0 +1,66 @@
+global:
+  environment: staging
+  domain: ai-assistant-staging.expedient.cloud
+
+images:
+  web:
+    tag: staging
+  mastra:
+    tag: staging
+  api:
+    tag: staging
+
+replicaCount:
+  web: 1
+  mastra: 1
+  api: 1
+
+autoscaling:
+  enabled: false
+
+env:
+  NODE_ENV: staging
+  USE_MOCK_DATA: "true"
+  AUTH_ENABLED: "false"
+  NEXT_PUBLIC_API_URL: "https://ai-assistant-staging.expedient.cloud/api"
+
+  # All integrations disabled in staging
+  SMC_API_ENABLED: "false"
+  ELASTIC_API_ENABLED: "false"
+  OPENWEBUI_API_ENABLED: "false"
+  CONFLUENCE_API_ENABLED: "false"
+  ALERTS_API_ENABLED: "false"
+  NOTIFICATIONS_ENABLED: "false"
+
+  OTEL_ENABLED: "false"
+  DAILY_BUDGET_USD: "5.00"
+  MONTHLY_BUDGET_USD: "50.00"
+
+ingress:
+  hosts:
+    - host: ai-assistant-staging.expedient.cloud
+      paths:
+        - path: /
+          pathType: Prefix
+          backend: web
+        - path: /api
+          pathType: Prefix
+          backend: mastra
+  tls:
+    - secretName: ai-assistant-staging-tls
+      hosts:
+        - ai-assistant-staging.expedient.cloud
+
+postgresql:
+  primary:
+    persistence:
+      size: 5Gi
+
+redis:
+  master:
+    persistence:
+      size: 2Gi
+
+qdrant:
+  persistence:
+    size: 10Gi

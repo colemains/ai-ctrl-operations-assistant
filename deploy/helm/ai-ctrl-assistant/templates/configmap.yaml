@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "ai-ctrl-assistant.fullname" . }}-config
+  labels:
+    {{- include "ai-ctrl-assistant.labels" . | nindent 4 }}
+data:
+  NODE_ENV: {{ .Values.env.NODE_ENV | quote }}
+  USE_MOCK_DATA: {{ .Values.env.USE_MOCK_DATA | quote }}
+  AUTH_ENABLED: {{ .Values.env.AUTH_ENABLED | quote }}
+  SMC_API_ENABLED: {{ .Values.env.SMC_API_ENABLED | quote }}
+  ELASTIC_API_ENABLED: {{ .Values.env.ELASTIC_API_ENABLED | quote }}
+  OPENWEBUI_API_ENABLED: {{ .Values.env.OPENWEBUI_API_ENABLED | quote }}
+  CONFLUENCE_API_ENABLED: {{ .Values.env.CONFLUENCE_API_ENABLED | quote }}
+  ALERTS_API_ENABLED: {{ .Values.env.ALERTS_API_ENABLED | quote }}
+  NOTIFICATIONS_ENABLED: {{ .Values.env.NOTIFICATIONS_ENABLED | quote }}
+  OTEL_ENABLED: {{ .Values.env.OTEL_ENABLED | quote }}
+  AUDIT_LOGGING_ENABLED: {{ .Values.env.AUDIT_LOGGING_ENABLED | quote }}
+  COST_TRACKING_ENABLED: {{ .Values.env.COST_TRACKING_ENABLED | quote }}
+  DAILY_BUDGET_USD: {{ .Values.env.DAILY_BUDGET_USD | quote }}
+  MONTHLY_BUDGET_USD: {{ .Values.env.MONTHLY_BUDGET_USD | quote }}
+  NEXT_PUBLIC_API_URL: {{ .Values.env.NEXT_PUBLIC_API_URL | quote }}

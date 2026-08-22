@@ -1,0 +1,23 @@
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "ai-ctrl-assistant.fullname" . }}-mastra
+  labels:
+    {{- include "ai-ctrl-assistant.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mastra
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "ai-ctrl-assistant.fullname" . }}-mastra
+  minReplicas: {{ .Values.autoscaling.mastra.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.mastra.maxReplicas }}
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: {{ .Values.autoscaling.mastra.targetCPUUtilizationPercentage }}
+{{- end }}

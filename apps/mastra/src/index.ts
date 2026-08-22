@@ -55,15 +55,15 @@ app.post('/api/query', async (req, res) => {
 
   try {
     const result = await agent.processQuery(query, userAuthContext);
-    
+
     console.log('✅ Query processed successfully');
-    
+
     res.json(result);
   } catch (error) {
     console.error('❌ Query processing failed:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      error: error instanceof Error ? error.message : 'Query processing failed' 
+      error: error instanceof Error ? error.message : 'Query processing failed'
     });
   }
 });

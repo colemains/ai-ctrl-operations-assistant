@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "ai-ctrl-assistant.fullname" . }}-mastra
+  labels:
+    {{- include "ai-ctrl-assistant.labels" . | nindent 4 }}
+    app.kubernetes.io/component: mastra
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+  - port: {{ .Values.service.mastra.port }}
+    targetPort: http
+    protocol: TCP
+    name: http
+  selector:
+    {{- include "ai-ctrl-assistant.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: mastra
