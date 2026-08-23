@@ -1,42 +1,87 @@
+# values-staging.yaml - Real Staging Environment
+# Team access with real integrations (READ-only)
+
 global:
   environment: staging
   domain: ai-assistant-staging.expedient.cloud
 
+# Image configuration (will be set by CI/CD)
+image:
+  repository: expedient/ai-ctrl-assistant
+  pullPolicy: Always
+
 images:
   web:
-    tag: staging
+    tag: "staging-latest"
   mastra:
-    tag: staging
-  api:
-    tag: staging
+    tag: "staging-latest"
 
+# Replica counts
 replicaCount:
-  web: 1
-  mastra: 1
-  api: 1
+  web: 2
+  mastra: 2
 
+# Autoscaling enabled for staging
 autoscaling:
-  enabled: false
+  enabled: true
+  mastra:
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+  web:
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
 
+# Resource limits (staging tier)
+resources:
+  mastra:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      cpu: 2000m
+      memory: 4Gi
+  web:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+# Environment variables - REAL integrations enabled
 env:
-  NODE_ENV: staging
-  USE_MOCK_DATA: "true"
-  AUTH_ENABLED: "false"
+  NODE_ENV: "staging"
+  USE_MOCK_DATA: "false"
+  AUTH_ENABLED: "true"
   NEXT_PUBLIC_API_URL: "https://ai-assistant-staging.expedient.cloud/api"
 
-  # All integrations disabled in staging
-  SMC_API_ENABLED: "false"
-  ELASTIC_API_ENABLED: "false"
-  OPENWEBUI_API_ENABLED: "false"
-  CONFLUENCE_API_ENABLED: "false"
-  ALERTS_API_ENABLED: "false"
-  NOTIFICATIONS_ENABLED: "false"
+  # Real integrations (READ-only tokens)
+  SMC_API_ENABLED: "true"
+  ELASTIC_API_ENABLED: "true"
+  OPENWEBUI_API_ENABLED: "true"
+  CONFLUENCE_API_ENABLED: "true"
+  ALERTS_API_ENABLED: "true"
 
-  OTEL_ENABLED: "false"
-  DAILY_BUDGET_USD: "5.00"
-  MONTHLY_BUDGET_USD: "50.00"
+  # Observability
+  NOTIFICATIONS_ENABLED: "true"
+  OTEL_ENABLED: "true"
+  AUDIT_LOGGING_ENABLED: "true"
+  COST_TRACKING_ENABLED: "true"
 
+  # Budget limits (staging)
+  DAILY_BUDGET_USD: "10.00"
+  MONTHLY_BUDGET_USD: "200.00"
+
+# Ingress with TLS
 ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-staging"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
   hosts:
     - host: ai-assistant-staging.expedient.cloud
       paths:
@@ -51,16 +96,84 @@ ingress:
       hosts:
         - ai-assistant-staging.expedient.cloud
 
+# Database configuration (cluster PostgreSQL)
 postgresql:
+  enabled: true
+  auth:
+    username: aiops_user
+    database: aiops_staging
+    existingSecret: "ai-ctrl-db-credentials"
+    secretKeys:
+      adminPasswordKey: "postgres-password"
+      userPasswordKey: "password"
   primary:
     persistence:
-      size: 5Gi
+      enabled: true
+      size: 10Gi
+      storageClass: ""  # Use cluster default
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
 
+# Redis configuration
 redis:
+  enabled: true
+  auth:
+    enabled: true
+    existingSecret: "ai-ctrl-redis-credentials"
+    existingSecretPasswordKey: "password"
   master:
     persistence:
-      size: 2Gi
+      enabled: true
+      size: 5Gi
+      storageClass: ""  # Use cluster default
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
 
-qdrant:
-  persistence:
-    size: 10Gi
+# Security Context
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+  readOnlyRootFilesystem: false  # Will fix in templates
+
+podSecurityContext:
+  seccompProfile:
+    type: RuntimeDefault
+
+# Node selector (remove for general nodes)
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity - spread pods across nodes
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - ai-ctrl-assistant
+          topologyKey: kubernetes.io/hostname
+
+# Service Monitor for Prometheus
+serviceMonitor:
+  enabled: false  # Enable when Prometheus is available
+
+# Network Policy
+networkPolicy:
+  enabled: false  # Enable in production

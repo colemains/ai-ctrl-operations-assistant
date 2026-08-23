@@ -1,44 +1,46 @@
-# syntax=docker/dockerfile:1
+FROM node:20-alpine AS base
 
-FROM node:20-alpine
-
-# Install tsx globally for running TypeScript
-RUN npm install -g tsx
-
-# Security: Create non-root user
-RUN addgroup --system --gid 1001 nodejs && \
-    adduser --system --uid 1001 appuser
+RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-# Copy root package files
-COPY package*.json ./
-COPY turbo.json ./
+# Copy everything needed for install
+COPY package.json package-lock.json* turbo.json ./
+COPY .npmrc* ./
 
-# Copy workspace package.json files (only what exists)
-COPY apps/mastra/package*.json ./apps/mastra/
-
-# Install ALL dependencies (this will install workspace deps)
-RUN npm ci
-
-# Copy all source code
-COPY apps/mastra ./apps/mastra
+# Copy all workspace files
+COPY apps ./apps
 COPY packages ./packages
-COPY data/mock ./data/mock
+COPY tools ./tools
 
-# Change ownership
-RUN chown -R appuser:nodejs /app
+# Install dependencies - this properly links the workspaces
+RUN npm install --legacy-peer-deps
 
-# Switch to non-root user
-USER appuser
+# Build ALL packages (not just mastra)
+# This ensures @ai-ctrl/* packages have their dist/ folders
+RUN npm run build
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:8080/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+# Verify the build output exists
+RUN ls -la /app/tools/smc/dist/ || echo "SMC tool not found" && \
+    ls -la /app/packages/contracts/dist/ || echo "Contracts dist not found"
+
+# Production stage
+FROM node:20-alpine AS runner
+
+WORKDIR /app
+
+# Only copy what's needed to run
+COPY --from=base /app/node_modules ./node_modules
+COPY --from=base /app/apps/mastra/dist ./apps/mastra/dist
+COPY --from=base /app/apps/mastra/package.json ./apps/mastra/
+
+# Copy all other packages and tools for dependency resolution
+COPY --from=base /app/packages ./packages
+COPY --from=base /app/tools ./tools
+
+ENV NODE_ENV=production
+ENV PORT=8080
 
 EXPOSE 8080
 
-WORKDIR /app/apps/mastra
-
-# Run with tsx (no build needed)
-CMD ["tsx", "src/index.ts"]
+CMD ["node", "--no-warnings", "apps/mastra/dist/index.js"]

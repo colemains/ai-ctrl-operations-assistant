@@ -33,7 +33,7 @@ env:
   NODE_ENV: development
   USE_MOCK_DATA: "true"
   AUTH_ENABLED: "false"
-  NEXT_PUBLIC_API_URL: "http://localhost:8080"
+  NEXT_PUBLIC_API_URL: "http://ai-ctrl-assistant-mastra:8080"
 
   SMC_API_ENABLED: "false"
   ELASTIC_API_ENABLED: "false"
@@ -51,55 +51,17 @@ env:
 ingress:
   enabled: false
 
-# Use Docker Hub images instead of GitHub
+# DISABLE Helm subchart dependencies
 postgresql:
-  enabled: true
-  image:
-    registry: docker.io
-    repository: bitnami/postgresql
-    tag: 16.1.0
-  auth:
-    username: aictrl
-    password: aictrl123
-    database: aictrl_ops
-  primary:
-    persistence:
-      enabled: false
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 500m
-        memory: 512Mi
+  enabled: false
 
 redis:
-  enabled: true
-  image:
-    registry: docker.io
-    repository: bitnami/redis
-    tag: 7.2.4
-  auth:
-    enabled: false
-  master:
-    persistence:
-      enabled: false
-    resources:
-      requests:
-        cpu: 50m
-        memory: 64Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
-  replica:
-    replicaCount: 0  # Disable replicas for local dev
+  enabled: false
 
-qdrant:
-  enabled: false  # Disable for now, add back later if needed
-
+# Provide database connection strings for our standalone manifests
 secrets:
-  databaseUrl: "postgresql://aictrl:aictrl123@ai-ctrl-assistant-postgresql:5432/aictrl_ops"
-  redisUrl: "redis://ai-ctrl-assistant-redis-master:6379"
+  databaseUrl: "postgresql://aictrl:aictrl123@postgres:5432/aictrl_ops"
+  redisUrl: "redis://redis:6379"
   qdrantUrl: ""
   qdrantApiKey: ""
   workosApiKey: ""
@@ -108,7 +70,6 @@ secrets:
   openaiApiKey: ""
   sessionSecret: "local-dev-secret-12345"
 
-# Remove node selector (causing scheduling failures)
 nodeSelector: {}
 tolerations: []
 affinity: {}
@@ -129,17 +90,16 @@ resources:
       cpu: 1000m
       memory: 2Gi
 
-# Simplified security context (no fsGroup issues)
 securityContext:
-  runAsNonRoot: true
+  runAsNonRoot: false
   runAsUser: 1001
   capabilities:
     drop:
       - ALL
-  readOnlyRootFilesystem: false  # Changed to false for simplicity
+  readOnlyRootFilesystem: false
 
 podSecurityContext:
-  runAsNonRoot: true
+  runAsNonRoot: false
   runAsUser: 1001
   fsGroup: 1001
 
