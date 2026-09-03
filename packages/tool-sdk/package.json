@@ -1,0 +1,19 @@
+{
+  "name": "@ai-ctrl/tool-sdk",
+  "version": "1.0.0",
+  "description": "Tool SDK for AI CTRL Operations Assistant",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@ai-ctrl/contracts": "1.0.0",
+    "@ai-ctrl/telemetry": "1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}

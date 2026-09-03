@@ -1,72 +1,191 @@
 [
   {
     "id": "INC0012345",
+    "title": "SSO Authentication Failures - Production Environment",
+    "description": "Multiple users reporting authentication failures when attempting to access production applications via SSO. Error message indicates token validation failure. Affecting approximately 50 users across multiple departments.",
+    "status": "Open",
+    "priority": "Critical",
     "client": "Alpha Manufacturing",
-    "priority": "critical",
-    "status": "open",
-    "title": "Authentication failures - SSO integration broken",
-    "description": "Users unable to login via Azure AD SSO. Error: OIDC token validation failed.",
-    "created_at": "2025-01-15T08:00:00Z",
-    "updated_at": "2025-01-15T09:30:00Z",
-    "assigned_to": "AI CTRL Team",
-    "problem_type": "AI_CTRL",
-    "environment": "production",
-    "affected_users": 45
+    "assignedTo": "cole.mains@expedient.com",
+    "createdAt": "2025-01-15T08:30:00Z",
+    "updatedAt": "2025-01-15T09:15:00Z",
+    "category": "Authentication",
+    "tags": ["sso", "authentication", "production", "urgent"],
+    "metadata": {
+      "affectedUsers": 50,
+      "environment": "production",
+      "severity": "high",
+      "sla": "4 hours"
+    }
   },
   {
     "id": "INC0012346",
-    "client": "Beta Financial Services",
-    "priority": "high",
-    "status": "open",
-    "title": "Gateway timeout errors - 504s",
-    "description": "OpenWebUI gateway returning 504 errors intermittently. Spike started at 08:15 AM.",
-    "created_at": "2025-01-15T08:15:00Z",
-    "updated_at": "2025-01-15T08:45:00Z",
-    "assigned_to": "AI CTRL Team",
-    "problem_type": "AI_CTRL",
-    "environment": "production",
-    "affected_users": 12
+    "title": "VPN Connection Intermittent - Remote Office",
+    "description": "Remote office in Chicago experiencing intermittent VPN connectivity. Users report being disconnected every 15-20 minutes. Network team suspects ISP routing issue or VPN concentrator problem.",
+    "status": "In Progress",
+    "priority": "High",
+    "client": "Beta Tech Solutions",
+    "assignedTo": "noc.team@expedient.com",
+    "createdAt": "2025-01-15T07:00:00Z",
+    "updatedAt": "2025-01-15T10:30:00Z",
+    "category": "Network",
+    "tags": ["vpn", "network", "connectivity", "remote-office"],
+    "metadata": {
+      "affectedSite": "Chicago Remote Office",
+      "affectedUsers": 25,
+      "troubleshootingSteps": ["Checked VPN logs", "Contacted ISP", "Monitoring concentrator"]
+    }
   },
   {
     "id": "INC0012347",
-    "client": "Gamma Healthcare",
-    "priority": "medium",
-    "status": "in_progress",
-    "title": "Data connector sync delay",
-    "description": "SharePoint connector sync running slower than normal. Currently 2 hours behind.",
-    "created_at": "2025-01-14T16:00:00Z",
-    "updated_at": "2025-01-15T07:00:00Z",
-    "assigned_to": "Cole Mains",
-    "problem_type": "AI_CTRL",
-    "environment": "production",
-    "affected_users": 0
+    "title": "Storage Array Capacity Alert - 85% Full",
+    "description": "Production storage array STORAGE-PROD-01 has reached 85% capacity. Current growth rate suggests 90% will be reached within 48 hours. Expansion or data cleanup required urgently.",
+    "status": "Open",
+    "priority": "High",
+    "client": "Gamma Logistics",
+    "assignedTo": "storage.team@expedient.com",
+    "createdAt": "2025-01-15T06:00:00Z",
+    "updatedAt": "2025-01-15T06:30:00Z",
+    "category": "Storage",
+    "tags": ["storage", "capacity", "infrastructure"],
+    "metadata": {
+      "currentCapacity": "85%",
+      "arrayName": "STORAGE-PROD-01",
+      "projectedFull": "48 hours",
+      "totalCapacity": "50TB"
+    }
   },
   {
     "id": "INC0012348",
-    "client": "Delta Logistics",
-    "priority": "medium",
-    "status": "open",
-    "title": "Elastic disk usage warning",
-    "description": "Elastic cluster disk usage at 87%. Approaching capacity limit.",
-    "created_at": "2025-01-15T06:00:00Z",
-    "updated_at": "2025-01-15T06:00:00Z",
-    "assigned_to": "Infrastructure Team",
-    "problem_type": "INFRASTRUCTURE",
-    "environment": "production",
-    "affected_users": 0
+    "title": "Ransomware Detection - Marketing File Server",
+    "description": "Security tools detected potential ransomware activity on FILESERVER-MKT-01. Server has been isolated from network. Security team investigating scope of infection. Backups being verified for restoration.",
+    "status": "In Progress",
+    "priority": "Critical",
+    "client": "Gamma Logistics",
+    "assignedTo": "security.team@expedient.com",
+    "createdAt": "2025-01-15T05:45:00Z",
+    "updatedAt": "2025-01-15T10:00:00Z",
+    "category": "Security",
+    "tags": ["security", "ransomware", "incident", "critical"],
+    "metadata": {
+      "affectedServer": "FILESERVER-MKT-01",
+      "isolatedAt": "2025-01-15T05:50:00Z",
+      "backupStatus": "verified",
+      "forensicsInProgress": true
+    }
   },
   {
-    "id": "REQ0005432",
-    "client": "Epsilon Technology",
-    "priority": "low",
-    "status": "open",
-    "title": "Enable Jira integration",
-    "description": "Customer requesting Jira data connector for AI CTRL deployment.",
-    "created_at": "2025-01-14T10:00:00Z",
-    "updated_at": "2025-01-14T10:00:00Z",
-    "assigned_to": "AI CTRL Team",
-    "problem_type": "AI_CTRL",
-    "environment": "production",
-    "affected_users": 0
+    "id": "INC0012349",
+    "title": "Application Performance Degradation - ERP System",
+    "description": "ERP application response times have increased from 2 seconds to 15+ seconds. Database queries running slower than normal. Affecting order processing and inventory management.",
+    "status": "Open",
+    "priority": "High",
+    "client": "Cochran Automotive",
+    "assignedTo": "app.support@expedient.com",
+    "createdAt": "2025-01-15T09:00:00Z",
+    "updatedAt": "2025-01-15T09:45:00Z",
+    "category": "Application",
+    "tags": ["performance", "erp", "database", "slowness"],
+    "metadata": {
+      "normalResponseTime": "2s",
+      "currentResponseTime": "15s",
+      "affectedModule": "Order Processing",
+      "databaseLoad": "high"
+    }
+  },
+  {
+    "id": "INC0012350",
+    "title": "Backup Job Failure - SQL Database",
+    "description": "Nightly backup job for SQLDB-PROD-02 failed at 02:30 AM. Error indicates insufficient disk space on backup target. Last successful backup was 48 hours ago.",
+    "status": "In Progress",
+    "priority": "High",
+    "client": "Cochran Automotive",
+    "assignedTo": "backup.team@expedient.com",
+    "createdAt": "2025-01-15T02:30:00Z",
+    "updatedAt": "2025-01-15T08:00:00Z",
+    "category": "Backup",
+    "tags": ["backup", "failure", "database", "storage"],
+    "metadata": {
+      "backupJob": "NIGHTLY-SQL-BACKUP",
+      "lastSuccessful": "2025-01-13T02:30:00Z",
+      "errorCode": "DISK_FULL",
+      "targetVolume": "/backups/sql"
+    }
+  },
+  {
+    "id": "INC0012351",
+    "title": "Email Server Memory Leak - Exchange",
+    "description": "Exchange server memory usage climbing steadily, currently at 92%. Server requires restart but needs to be scheduled during maintenance window to minimize impact.",
+    "status": "Pending",
+    "priority": "Medium",
+    "client": "Delta Financial Services",
+    "assignedTo": "messaging.team@expedient.com",
+    "createdAt": "2025-01-15T04:00:00Z",
+    "updatedAt": "2025-01-15T07:30:00Z",
+    "category": "Email",
+    "tags": ["email", "exchange", "memory", "maintenance"],
+    "metadata": {
+      "currentMemory": "92%",
+      "serverName": "EXCH-PROD-01",
+      "maintenanceWindow": "2025-01-16T02:00:00Z",
+      "affectedUsers": 500
+    }
+  },
+  {
+    "id": "INC0012352",
+    "title": "Firewall High CPU Utilization",
+    "description": "Primary datacenter firewall showing sustained 85%+ CPU utilization. Causing packet drops and connection delays. Traffic analysis shows unusual spike in outbound HTTPS connections.",
+    "status": "Open",
+    "priority": "High",
+    "client": "Alpha Manufacturing",
+    "assignedTo": "network.team@expedient.com",
+    "createdAt": "2025-01-15T10:00:00Z",
+    "updatedAt": "2025-01-15T10:30:00Z",
+    "category": "Network",
+    "tags": ["firewall", "performance", "cpu", "network"],
+    "metadata": {
+      "cpuUtilization": "85%",
+      "deviceName": "FW-DC-PRIMARY-01",
+      "packetDrops": "0.5%",
+      "suspiciousTraffic": true
+    }
+  },
+  {
+    "id": "INC0012353",
+    "title": "VM Cluster Failover Required - Planned Maintenance",
+    "description": "Hypervisor host requires firmware update. Need to migrate 15 VMs to secondary host and perform rolling maintenance. Scheduled for tonight at 11 PM.",
+    "status": "Pending",
+    "priority": "Medium",
+    "client": "Beta Tech Solutions",
+    "assignedTo": "virtualization.team@expedient.com",
+    "createdAt": "2025-01-15T11:00:00Z",
+    "updatedAt": "2025-01-15T11:15:00Z",
+    "category": "Infrastructure",
+    "tags": ["virtualization", "maintenance", "planned", "vmware"],
+    "metadata": {
+      "hostName": "ESX-PROD-03",
+      "vmCount": 15,
+      "scheduledTime": "2025-01-15T23:00:00Z",
+      "estimatedDuration": "2 hours"
+    }
+  },
+  {
+    "id": "INC0012354",
+    "title": "Certificate Expiration Warning - Load Balancer",
+    "description": "SSL certificate on primary load balancer expires in 7 days. Certificate renewal and deployment must be completed before expiration to avoid service disruption.",
+    "status": "Open",
+    "priority": "Medium",
+    "client": "Delta Financial Services",
+    "assignedTo": "security.team@expedient.com",
+    "createdAt": "2025-01-15T08:00:00Z",
+    "updatedAt": "2025-01-15T08:30:00Z",
+    "category": "Security",
+    "tags": ["certificate", "ssl", "expiration", "load-balancer"],
+    "metadata": {
+      "expirationDate": "2025-01-22T00:00:00Z",
+      "deviceName": "LB-PROD-01",
+      "certificateType": "wildcard",
+      "domains": ["*.deltafinancial.com"]
+    }
   }
 ]

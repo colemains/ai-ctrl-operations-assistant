@@ -1,0 +1,21 @@
+{
+  "name": "@ai-ctrl/retool-workflows",
+  "version": "1.0.0",
+  "description": "Retool Workflows integration for AI CTRL Operations",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@ai-ctrl/contracts": "1.0.0",
+    "@ai-ctrl/tool-sdk": "1.0.0",
+    "@ai-ctrl/telemetry": "1.0.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}

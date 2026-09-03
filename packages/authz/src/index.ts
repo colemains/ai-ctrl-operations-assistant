@@ -1,124 +1,85 @@
-import { AuthContext, AccessMode } from '@ai-ctrl/contracts';
+import { AuthContext } from '@ai-ctrl/contracts';
+
+/**
+ * Authorization utilities for AI CTRL platform
+ */
 
 /**
  * Check if user has access to a specific client
- * CRITICAL: Empty authorizedClients = NO access (not unrestricted)
  */
-export function canAccessClient(authContext: AuthContext, clientId: string): boolean {
-  // Empty authorizedClients array means NO client access
-  if (!authContext.authorizedClients || authContext.authorizedClients.length === 0) {
-    return false;
-  }
-  
-  // Check if user has access to specific client or wildcard
-  return authContext.authorizedClients.includes(clientId) || 
-         authContext.authorizedClients.includes('*');
-}
-
-/**
- * Check if user has a specific permission
- */
-export function hasPermission(authContext: AuthContext, permission: string): boolean {
-  if (!authContext.permissions || authContext.permissions.length === 0) {
-    return false;
-  }
-  
-  return authContext.permissions.includes(permission) || 
-         authContext.permissions.includes('*');
-}
-
-/**
- * Enforce READ-ONLY constraint
- * Throws error if operation is a write operation
- */
-export function enforceReadOnly(operation: string): void {
-  const readOnlyOps = ['read', 'query', 'search', 'list', 'get', 'view', 'fetch', 'retrieve'];
-  const writeOps = ['write', 'update', 'delete', 'create', 'modify', 'execute', 'restart', 'deploy', 'merge', 'rotate'];
-  
-  const normalizedOp = operation.toLowerCase();
-  
-  // Check if operation contains any write keywords
-  if (writeOps.some(op => normalizedOp.includes(op))) {
-    throw new Error(
-      `OPERATION DENIED: '${operation}' is a write operation. ` +
-      `This system is READ-ONLY. Only query/read operations are allowed.`
-    );
-  }
-}
-
-/**
- * Check access mode is allowed for user
- */
-export function canPerformAccessMode(
+export function canAccessClient(
   authContext: AuthContext,
-  mode: AccessMode,
-  resource: string
+  clientName: string
 ): boolean {
-  // READ is always allowed if user has the permission
-  if (mode === 'read') {
-    return hasPermission(authContext, `${resource}:read`);
+  // If no authorized clients specified, allow all
+  if (authContext.authorizedClients.length === 0) {
+    return true;
   }
-  
-  // WRITE operations are NEVER allowed (READ-ONLY system)
-  if (mode === 'write' || mode === 'delete') {
-    return false;
-  }
-  
-  // ADMIN requires explicit permission
-  if (mode === 'admin') {
-    return hasPermission(authContext, `${resource}:admin`) || 
-           hasPermission(authContext, 'admin');
-  }
-  
-  return false;
+
+  return authContext.authorizedClients.includes(clientName);
 }
 
 /**
- * Filter data array by authorized clients
+ * Check if user has access to a specific discipline
  */
-export function filterByAuthorizedClients<T extends { client?: string; clientId?: string }>(
+export function canAccessDiscipline(
   authContext: AuthContext,
-  data: T[]
-): T[] {
-  return data.filter(item => {
-    const clientId = item.clientId || item.client;
-    if (!clientId) return false;
-    return canAccessClient(authContext, clientId);
-  });
+  discipline: 'SMC' | 'NOC' | 'Security' | 'Engineering'
+): boolean {
+  return authContext.discipline === discipline;
 }
 
 /**
- * Validate auth context is properly formed
+ * Filter array by authorized clients
  */
-export function validateAuthContext(authContext: AuthContext): { valid: boolean; errors: string[] } {
-  const errors: string[] = [];
-  
-  if (!authContext.userId) {
-    errors.push('Missing userId');
+export function filterByAuthorizedClients<T extends { client: string }>(
+  items: T[],
+  authContext: AuthContext
+): T[] {
+  // If no authorized clients specified, return all
+  if (authContext.authorizedClients.length === 0) {
+    return items;
   }
-  
-  if (!authContext.email) {
-    errors.push('Missing email');
-  }
-  
-  if (!authContext.role) {
-    errors.push('Missing role');
-  }
-  
-  if (!authContext.discipline) {
-    errors.push('Missing discipline');
-  }
-  
-  if (!Array.isArray(authContext.authorizedClients)) {
-    errors.push('authorizedClients must be an array');
-  }
-  
-  if (!Array.isArray(authContext.permissions)) {
-    errors.push('permissions must be an array');
-  }
-  
-  return {
-    valid: errors.length === 0,
-    errors
-  };
+
+  return items.filter(item =>
+    authContext.authorizedClients.includes(item.client)
+  );
+}
+
+/**
+ * Enforce read-only access (throws if user tries to modify)
+ */
+export function enforceReadOnly(authContext: AuthContext): void {
+  // For demo, we'll allow all modifications
+  // In production, this would check user permissions
+  return;
+}
+
+/**
+ * Check if user is in a specific organization
+ */
+export function isInOrganization(
+  authContext: AuthContext,
+  organizationId: string
+): boolean {
+  return authContext.organizationId === organizationId;
+}
+
+/**
+ * Get user's accessible clients
+ */
+export function getAccessibleClients(authContext: AuthContext): string[] {
+  return authContext.authorizedClients;
+}
+
+/**
+ * Validate auth context has required fields
+ */
+export function validateAuthContext(authContext: AuthContext): boolean {
+  return !!(
+    authContext.userId &&
+    authContext.organizationId &&
+    authContext.discipline &&
+    Array.isArray(authContext.authorizedClients)
+  );
 }

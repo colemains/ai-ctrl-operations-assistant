@@ -1,0 +1,20 @@
+{
+  "name": "@ai-ctrl/note-generator",
+  "version": "1.0.0",
+  "description": "SMC note generation for internal and public facing notes",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@ai-ctrl/contracts": "*",
+    "@ai-ctrl/tool-sdk": "*",
+    "@ai-ctrl/telemetry": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.2.0"
+  }
+}

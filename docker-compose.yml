@@ -13,7 +13,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./scripts/init-db.sql:/docker-entrypoint-init-db.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ai_ctrl"]
       interval: 10s
@@ -31,32 +31,53 @@ services:
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
-      timeout: 5s
-      retries: 5
 
-  # Qdrant - Vector database for RAG/semantic search
-  qdrant:
-    image: qdrant/qdrant:latest
-    container_name: ai-ctrl-qdrant
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: apps/mastra/Dockerfile
+    container_name: ai-ctrl-backend
     ports:
-      - "6333:6333"
-      - "6334:6334"
-    volumes:
-      - qdrant_data:/qdrant/storage
+      - "8080:8080"
     environment:
-      QDRANT__SERVICE__HTTP_PORT: 6333
-      QDRANT__SERVICE__GRPC_PORT: 6334
+      - NODE_ENV=production
+      - PORT=8080
+      - USE_MOCK_DATA=true
+      - AUTH_ENABLED=false
+      - ALLOWED_ORIGINS=*
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - RETOOL_API_URL=${RETOOL_API_URL:-https://api.retool.com/v1}
+      - RETOOL_API_KEY=${RETOOL_API_KEY}
+      - RETOOL_ENVIRONMENT=${RETOOL_ENVIRONMENT:-production}
+    networks:
+      - ai-ctrl-network
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend Web UI
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: ai-ctrl-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://backend:8080
+    depends_on:
+      - backend
+    networks:
+      - ai-ctrl-network
+
+networks:
+  ai-ctrl-network:
+    driver: bridge
 
 volumes:
   postgres_data:
   redis_data:
-  qdrant_data:
-
-networks:
-  default:
-    name: ai-ctrl-network

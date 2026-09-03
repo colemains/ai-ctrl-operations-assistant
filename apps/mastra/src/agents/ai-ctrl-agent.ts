@@ -1,7 +1,13 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { AuthContext } from '@ai-ctrl/contracts';
-import { SMCTicketAdapter } from '@ai-ctrl/tool-smc';
-import { AlertAdapter } from '@ai-ctrl/tool-alerts';
+import { SMCTicketAdapter } from '../../../../tools/smc/dist/index.js';
+import { AlertAdapter } from '../../../../tools/alerts/dist/index.js';
+import {
+  createRetoolWorkflowsClient,
+  RetoolWorkflowsClient,
+  WorkflowExecutionResult,
+} from '../../../../tools/retool-workflows/dist/index.js';
+import { NoteGeneratorTool } from '../../../../tools/note-generator/dist/index.js';
 
 type QueryType =
   | 'SEVERITY_GROUPED'
@@ -16,14 +22,34 @@ type QueryType =
 
 export class AICTRLAgent {
   private anthropic: Anthropic;
-  private ticketAdapter: SMCTicketAdapter;
-  private alertAdapter: AlertAdapter;
+  public ticketAdapter: SMCTicketAdapter;
+  public retoolClient: RetoolWorkflowsClient;
+  public noteGenerator: NoteGeneratorTool;
+  public alertAdapter: AlertAdapter;
 
   constructor() {
     const apiKey = process.env.ANTHROPIC_API_KEY || 'mock-api-key-for-testing';
     this.anthropic = new Anthropic({ apiKey });
     this.ticketAdapter = new SMCTicketAdapter();
+    this.retoolClient = createRetoolWorkflowsClient({
+      apiUrl: process.env.RETOOL_API_URL || 'https://api.retool.com/v1',
+      apiKey: process.env.RETOOL_API_KEY || '',
+      environment: (process.env.RETOOL_ENVIRONMENT as 'production' | 'staging') || 'production',
+    });
+    this.noteGenerator = new NoteGeneratorTool();
     this.alertAdapter = new AlertAdapter();
+  }
+
+  async executeWorkflow(
+    workflowId: string,
+    parameters: Record<string, unknown>,
+    authContext: AuthContext
+  ): Promise<WorkflowExecutionResult> {
+    console.log(`Executing Retool Workflow: ${workflowId}`);
+    console.log(`User: ${authContext.email}`);
+
+    const execution = await this.retoolClient.executeWorkflow(workflowId, parameters);
+    return this.retoolClient.waitForCompletion(execution.executionId);
   }
 
   async processQuery(query: string, authContext: AuthContext) {
