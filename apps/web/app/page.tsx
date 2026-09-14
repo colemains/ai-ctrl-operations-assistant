@@ -70,7 +70,8 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/api/query', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+      const response = await fetch(`${apiUrl}/api/query`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -78,9 +79,11 @@ export default function Home() {
         body: JSON.stringify({
           query: input,
           authContext: {
-            userId: user?.id || 'anonymous',
+            userId: user?.id || 'cole.mains',
+            email: user?.email || 'cole.mains@ai-ctrl.com',
+            role: user?.role || 'AI CTRL Engineer',
             discipline: 'SMC',
-            authorizedClients: user?.permissions.authorizedClients || []
+            authorizedClients: user?.permissions?.authorizedClients || []
           }
         })
       });

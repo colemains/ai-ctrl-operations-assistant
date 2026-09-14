@@ -17,31 +17,35 @@ export default function TicketDashboard({ onGenerateNote }: TicketDashboardProps
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
 
   // Mock tickets for now
-  React.useEffect(() => {
+    React.useEffect(() => {
     const mockTickets: Ticket[] = [
       {
         id: 'INC0012345',
         title: 'Network Connectivity Issue',
-        description: 'Users unable to access internal resources',
-        status: 'open',
-        priority: 'high',
+        summary: 'Users unable to access internal resources',
+        status: 'Open',
+        priority: 'P2',
+        discipline: 'SMC',
         client: 'Alpha Manufacturing',
         assignedTo: 'Cole Mains',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        tags: ['network', 'connectivity']
+        tags: ['network', 'connectivity'],
+        affectedAssets: ['core-switch-01', 'vpn-gw-02']
       },
       {
         id: 'INC0012346',
         title: 'Email Server Down',
-        description: 'Email service unavailable',
-        status: 'in-progress',
-        priority: 'critical',
+        summary: 'Email service unavailable',
+        status: 'In Progress',
+        priority: 'P1',
+        discipline: 'SMC',
         client: 'Beta Tech Solutions',
         assignedTo: 'Cole Mains',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        tags: ['email', 'server']
+        tags: ['email', 'server'],
+        affectedAssets: ['mail-relay-01']
       }
     ];
     setTickets(mockTickets);
@@ -125,7 +129,7 @@ export default function TicketDashboard({ onGenerateNote }: TicketDashboardProps
                 {ticket.priority}
               </span>
             </div>
-            <p className="text-gray-300 mb-4">{ticket.description}</p>
+            <p className="text-gray-300 mb-4">{ticket.summary}</p>
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-400">Assigned to: {ticket.assignedTo}</span>
               <span className="text-gray-400">{new Date(ticket.createdAt).toLocaleDateString()}</span>
@@ -138,7 +142,7 @@ export default function TicketDashboard({ onGenerateNote }: TicketDashboardProps
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setSelectedTicket(null)}>
           <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-6 max-w-2xl w-full m-4" onClick={(e) => e.stopPropagation()}>
             <h2 className="text-2xl font-bold text-white mb-4">{selectedTicket.title}</h2>
-            <p className="text-gray-300 mb-4">{selectedTicket.description}</p>
+            <p className="text-gray-300 mb-4">{selectedTicket.summary}</p>
             <div className="flex gap-4">
               <button
                 onClick={() => {

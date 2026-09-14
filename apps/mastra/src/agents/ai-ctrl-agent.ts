@@ -40,13 +40,13 @@ export class AICTRLAgent {
     this.alertAdapter = new AlertAdapter();
   }
 
-  async executeWorkflow(
+  public async executeWorkflow(
     workflowId: string,
     parameters: Record<string, unknown>,
     authContext: AuthContext
   ): Promise<WorkflowExecutionResult> {
     console.log(`Executing Retool Workflow: ${workflowId}`);
-    console.log(`User: ${authContext.email}`);
+    console.log(`User: ${authContext.userId}`);
 
     const execution = await this.retoolClient.executeWorkflow(workflowId, parameters);
     return this.retoolClient.waitForCompletion(execution.executionId);
@@ -74,12 +74,17 @@ export class AICTRLAgent {
         };
       }
 
-      // Check if we're using real AI or mock mode
-      if (process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== 'mock-api-key-for-testing') {
+            // Check if we're using real AI or mock mode
+      const hasRealApiKey = Boolean(
+        process.env.ANTHROPIC_API_KEY &&
+        process.env.ANTHROPIC_API_KEY.startsWith('sk-ant-') &&
+        process.env.USE_MOCK_DATA !== 'true'
+      );
+
+      if (hasRealApiKey) {
         // Real AI API call
         const systemPrompt = this.buildSystemPrompt(authContext);
         const dataContext = this.buildDataContext(ticketsResult.data || [], alertsResult.data || []);
-
         const response = await this.anthropic.messages.create({
           model: 'claude-3-5-sonnet-20241022',
           max_tokens: 2000,
@@ -91,11 +96,9 @@ export class AICTRLAgent {
             }
           ],
         });
-
         const responseText = response.content[0].type === 'text'
           ? response.content[0].text
           : 'No text response';
-
         return {
           success: true,
           response: responseText,

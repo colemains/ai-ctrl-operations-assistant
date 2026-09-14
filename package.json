@@ -7,7 +7,7 @@
     "tools/*"
   ],
   "scripts": {
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --concurrency=11",
     "build": "turbo run build",
     "test": "turbo run test",
     "lint": "turbo run lint",
